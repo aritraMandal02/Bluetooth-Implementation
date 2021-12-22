@@ -52,19 +52,7 @@ public class MainActivity extends AppCompatActivity {
         bluetoothOffMethod();
         checkCoarseLocationPermission();
         exeButton();
-        // getNearbyDevices();
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bluetoothAdapter.startDiscovery();
-            }
-        });
-
-        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(myReceiver, intentFilter);
-        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, stringArrayList);
-        listView.setAdapter(arrayAdapter);
+        getNearbyDevices();
     }
 
     private boolean checkCoarseLocationPermission() {
@@ -89,9 +77,18 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-//    private void getNearbyDevices() {
-//
-//    }
+    private void getNearbyDevices() {
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothAdapter.startDiscovery();
+                IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(myReceiver, intentFilter);
+                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, stringArrayList);
+                listView.setAdapter(arrayAdapter);
+            }
+        });
+    }
 
     private void exeButton() {
         btn.setOnClickListener(new View.OnClickListener() {
