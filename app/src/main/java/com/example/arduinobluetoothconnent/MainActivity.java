@@ -2,10 +2,17 @@ package com.example.arduinobluetoothconnent;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,15 +20,20 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btOn, btOff, btn;
+    private static final int REQUEST_ACCESS_COARSE_LOCATION = 1;
+    Button btOn, btOff, btn, btn2;
     ListView listView;
     BluetoothAdapter bluetoothAdapter;
     Intent btEnableIntent;
     int requestCodeForEnable;
+    ArrayAdapter<String> arrayAdapter;
+    ArrayList<String> stringArrayList = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         btOn = findViewById(R.id.btOn);
         btOff = findViewById(R.id.btOff);
         btn = findViewById(R.id.button3);
+        btn2 = findViewById(R.id.button4);
         listView = findViewById(R.id.listview);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         btEnableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -37,8 +50,49 @@ public class MainActivity extends AppCompatActivity {
 
         bluetoothOnMethod();
         bluetoothOffMethod();
+        checkCoarseLocationPermission();
         exeButton();
+        // getNearbyDevices();
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothAdapter.startDiscovery();
+            }
+        });
+
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(myReceiver, intentFilter);
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, stringArrayList);
+        listView.setAdapter(arrayAdapter);
     }
+
+    private boolean checkCoarseLocationPermission() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ACCESS_COARSE_LOCATION);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(BluetoothDevice.ACTION_FOUND.equals(action)){
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                stringArrayList.add(device.getName());
+                arrayAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
+//    private void getNearbyDevices() {
+//
+//    }
+
     private void exeButton() {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         strings[index] = device.getName();
                         index++;
                     }
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
+                    arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
                     listView.setAdapter(arrayAdapter);
                 }
             }
