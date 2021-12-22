@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         bluetoothOffMethod();
         exeButton();
     }
-
     private void exeButton() {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
