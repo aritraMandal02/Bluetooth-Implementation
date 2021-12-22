@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothAdapter bluetoothAdapter;
     Intent btEnableIntent;
     int requestCodeForEnable;
-    ArrayAdapter<String> arrayAdapter;
+    ArrayAdapter<String> arrayAdapter1, arrayAdapter2;
     ArrayList<String> stringArrayList = new ArrayList<String>();
 
     @Override
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             if(BluetoothDevice.ACTION_FOUND.equals(action)){
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 stringArrayList.add(device.getName());
-                arrayAdapter.notifyDataSetChanged();
+                arrayAdapter2.notifyDataSetChanged();
             }
         }
     };
@@ -81,11 +81,14 @@ public class MainActivity extends AppCompatActivity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(arrayAdapter2!=null){
+                    arrayAdapter2.clear();
+                }
                 bluetoothAdapter.startDiscovery();
                 IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(myReceiver, intentFilter);
-                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, stringArrayList);
-                listView.setAdapter(arrayAdapter);
+                arrayAdapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, stringArrayList);
+                listView.setAdapter(arrayAdapter2);
             }
         });
     }
@@ -103,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                         strings[index] = device.getName();
                         index++;
                     }
-                    arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
-                    listView.setAdapter(arrayAdapter);
+                    arrayAdapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
+                    listView.setAdapter(arrayAdapter1);
                 }
             }
         });
