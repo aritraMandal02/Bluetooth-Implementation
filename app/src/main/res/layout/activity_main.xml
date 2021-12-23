@@ -8,8 +8,8 @@
 
     <ListView
         android:id="@+id/listview"
-        android:layout_width="307dp"
-        android:layout_height="472dp"
+        android:layout_width="316dp"
+        android:layout_height="168dp"
         android:layout_marginTop="68dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,5 +57,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="132dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
