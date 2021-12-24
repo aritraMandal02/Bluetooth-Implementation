@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     int requestCodeForEnable;
     ArrayAdapter<String> arrayAdapter1, arrayAdapter2;
     ArrayList<String> stringArrayList = new ArrayList<String>();
-    private static final UUID MY_UUID = UUID.fromString("3f067dc7-cac5-479c-adde-1b9eee570c05");
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // This UUID works!!!
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
